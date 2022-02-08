@@ -11,7 +11,7 @@ const useColorMapping = () => {
 
   const getColorByStatus = (status) => COLOR_MAP[status];
 
-  return [getColorByStatus];
+  return { getColorByStatus };
 };
 
 export default useColorMapping;

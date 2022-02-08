@@ -4,7 +4,11 @@ import { TRANSPARENT, VALID_COLORS } from 'util/constants/colors';
 import { DEFAULT_TILE_SIZE } from 'util/constants/sizes';
 import TileDiv from './styled';
 
-const Tile = ({ color, size }) => <TileDiv color={color} size={size} />;
+const Tile = ({ color, size, value }) => (
+  <TileDiv color={color} size={size}>
+    {value?.toUpperCase()}
+  </TileDiv>
+);
 
 Tile.propTypes = {
   color: PropTypes.oneOf(VALID_COLORS),

@@ -9,6 +9,10 @@ const TileDiv = styled.div`
   background-color: ${(props) => props.color};
   border: 2px solid
     ${(props) => (props.color === TRANSPARENT ? DARK_GRAY : props.color)};
+  display: grid;
+  place-content: center;
+  font-weight: 500;
+  font-size: 2rem;
 `;
 
 export default TileDiv;
