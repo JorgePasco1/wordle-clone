@@ -9,3 +9,8 @@ export const WordleBoardSizes = {
   COLS: 5,
   ROWS: 6,
 };
+
+export const KeyCodes = {
+  ENTER: 13,
+  BACKSPACE: 8,
+};

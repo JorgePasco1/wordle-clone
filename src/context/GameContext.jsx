@@ -7,15 +7,8 @@ export const GameContext = createContext();
 export const GameContextProvider = ({ children }) => {
   const [game, setGame] = useState(WordleService.createWordleGame());
 
-  const handleCharInput = (value) => {
-    const result = game.clone();
-    result.assignTile(value);
-
-    setGame(result);
-  };
-
   return (
-    <GameContext.Provider value={{ game, handleCharInput }}>
+    <GameContext.Provider value={{ game, setGame }}>
       {children}
     </GameContext.Provider>
   );

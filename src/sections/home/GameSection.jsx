@@ -7,7 +7,6 @@ import Tile from 'components/Tile';
 
 const GameSection = () => {
   const { tiles } = useGame();
-  console.log({ tiles });
   const { getColorByStatus } = useColorMapping();
   return (
     <Board>
