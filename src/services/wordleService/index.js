@@ -1,4 +1,5 @@
 import { TileStatuses, WordleBoardSizes } from './constants';
+import { RowNotFinishedError } from './errors';
 
 class Tile {
   character = null;
@@ -41,16 +42,40 @@ class Wordle {
   }
 
   submitWord() {
-    if (!Wordle.isRowFinished(this)) throw new Error('Word not finished');
+    if (!Wordle.isRowFinished(this)) throw new RowNotFinishedError();
+    this.checkRow();
+    if (this.hasWon()) return alert('You won!');
+    if (this.gameOver()) return alert('Game over!');
+    this.moveToNextRow();
+  }
 
-    const checkRow = () => {
-      console.log('board, pos', this.board, this.currentPos);
-      this.board[this.currentPos.i].forEach((tile, idx) => {
-        console.log(tile.character);
-      });
-    };
+  checkRow() {
+    console.log('board, pos', this.board, this.currentPos);
+    const { i } = this.currentPos;
+    this.board[i].forEach((tile, idx) => {
+      const char = tile.character;
 
-    checkRow();
+      tile.status = TileStatuses.FAILED;
+      if (this.targetWord.includes(char))
+        tile.status = TileStatuses.PARTIAL_SUCCESS;
+
+      if (this.targetWord[idx] === char) tile.status = TileStatuses.SUCCESS;
+    });
+  }
+
+  moveToNextRow() {
+    this.currentPos.j = 0;
+    this.currentPos.i += 1;
+  }
+
+  hasWon() {
+    return this.board[this.currentPos.i].every(
+      (tile) => tile.status === TileStatuses.SUCCESS
+    );
+  }
+
+  gameOver() {
+    return this.currentPos.i === WordleBoardSizes.ROWS - 1 && !this.hasWon();
   }
 
   static createBoard(height, width) {

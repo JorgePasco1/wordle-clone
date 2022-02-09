@@ -1,6 +1,7 @@
 import { GameContext } from 'context/GameContext';
 import { useEffect, useContext, useCallback } from 'react';
 import { KeyCodes } from 'services/wordleService/constants';
+import { RowNotFinishedError } from 'services/wordleService/errors';
 import { isLetter } from 'util/helpers/stringsHelper';
 
 export default function useGame() {
@@ -27,8 +28,14 @@ export default function useGame() {
     const result = game.clone();
     try {
       result.submitWord();
+      console.log({ result });
+      setGame(result);
     } catch (err) {
-      alert('Word not finished');
+      if (err instanceof RowNotFinishedError) {
+        alert('Word not finished');
+      } else {
+        throw err;
+      }
     }
     setGame(result);
   }, [game, setGame]);
