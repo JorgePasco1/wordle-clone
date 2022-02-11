@@ -15,6 +15,11 @@ export const KeyCodes = {
   BACKSPACE: 8,
 };
 
+export const SpecialCharacters = {
+  ENTER: 'enter',
+  BACKSPACE: '⏪',
+};
+
 export const GameStatuses = {
   WON: 'WON',
   LOST: 'LOST',

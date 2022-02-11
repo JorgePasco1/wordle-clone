@@ -1,6 +1,10 @@
 import { GameContext } from 'context/GameContext';
 import { useEffect, useContext, useCallback } from 'react';
-import { GameStatuses, KeyCodes } from 'services/wordleService/constants';
+import {
+  GameStatuses,
+  KeyCodes,
+  SpecialCharacters,
+} from 'services/wordleService/constants';
 import {
   InvalidWordError,
   RowNotFinishedError,
@@ -53,18 +57,27 @@ export default function useGame() {
     setGame(result);
   }, [game, setGame]);
 
+  const handleVirtualKeyPress = useCallback(
+    (key) => {
+      if (key === SpecialCharacters.ENTER) return handleWordSubmission();
+      if (key === SpecialCharacters.BACKSPACE) return handleCharDeletion();
+      handleCharInput(key);
+    },
+    [handleWordSubmission, handleCharDeletion, handleCharInput]
+  );
+
   useEffect(() => {
-    const handleKeyDown = ({ key: char, which }) => {
+    const handleKeyDown = ({ key, which }) => {
       if (which === KeyCodes.ENTER) return handleWordSubmission();
       if (which === KeyCodes.BACKSPACE) return handleCharDeletion();
 
-      if (!isLetter(char)) return;
-      handleCharInput(char);
+      if (!isLetter(key)) return;
+      handleCharInput(key);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleCharInput, handleWordSubmission, handleCharDeletion]);
 
-  return { tiles };
+  return { tiles, handleVirtualKeyPress };
 }

@@ -1,13 +1,14 @@
+import PropTypes from 'prop-types';
+
 import useColorMapping from 'hooks/useColorMapping';
-import useGame from 'hooks/useGame';
 
 import Board from 'components/Board';
 import Row from 'components/Row';
 import Tile from 'components/Tile';
 
-const GameSection = () => {
-  const { tiles } = useGame();
+const Wordle = ({ tiles }) => {
   const { getColorByStatus } = useColorMapping();
+
   return (
     <Board>
       {tiles.map((row, rowIndex) => (
@@ -25,4 +26,8 @@ const GameSection = () => {
   );
 };
 
-export default GameSection;
+Wordle.propTypes = {
+  tiles: PropTypes.array,
+};
+
+export default Wordle;
