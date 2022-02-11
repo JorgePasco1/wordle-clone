@@ -14,3 +14,9 @@ export const KeyCodes = {
   ENTER: 13,
   BACKSPACE: 8,
 };
+
+export const GameStatuses = {
+  WON: 'WON',
+  LOST: 'LOST',
+  PLAYING: 'PLAYING',
+};
