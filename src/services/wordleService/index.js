@@ -1,5 +1,6 @@
+import DictionaryService from 'services/dictionaryService';
 import { GameStatuses, TileStatuses, WordleBoardSizes } from './constants';
-import { RowNotFinishedError } from './errors';
+import { InvalidWordError, RowNotFinishedError } from './errors';
 
 class Tile {
   character = null;
@@ -7,14 +8,15 @@ class Tile {
 }
 
 class Wordle {
-  constructor() {
+  constructor(targetWord, isValidWordFunction) {
     this.board = Wordle.createBoard(
       WordleBoardSizes.ROWS,
       WordleBoardSizes.COLS
     );
-    this.targetWord = 'debug';
+    this.targetWord = targetWord;
     this.currentPos = { i: 0, j: 0 };
     this.gameStatus = GameStatuses.PLAYING;
+    this.isValidWordFunction = isValidWordFunction;
   }
 
   clone() {
@@ -23,6 +25,7 @@ class Wordle {
     result.targetWord = this.targetWord;
     result.currentPos = { ...this.currentPos };
     result.gameStatus = this.gameStatus;
+    result.isValidWordFunction = this.isValidWordFunction;
     return result;
   }
 
@@ -46,6 +49,8 @@ class Wordle {
 
   submitWord() {
     if (!Wordle.isRowFinished(this)) throw new RowNotFinishedError();
+    if (!this.validateWord()) throw new InvalidWordError();
+
     this.checkRow();
     if (this.hasWon()) {
       return this.setStatus(GameStatuses.WON);
@@ -67,6 +72,15 @@ class Wordle {
 
       if (this.targetWord[idx] === char) tile.status = TileStatuses.SUCCESS;
     });
+  }
+
+  joinCurrentRowLetters() {
+    const { i } = this.currentPos;
+    return this.board[i].reduce((acc, tile) => acc + tile.character, '');
+  }
+
+  validateWord() {
+    return this.isValidWordFunction(this.joinCurrentRowLetters());
   }
 
   moveToNextRow() {
@@ -107,6 +121,8 @@ class Wordle {
 
 export default class WordleService {
   static createWordleGame() {
-    return new Wordle();
+    const targetWord = DictionaryService.getRandomWord();
+    const isValidWordFunction = DictionaryService.isValidWord;
+    return new Wordle(targetWord, isValidWordFunction);
   }
 }

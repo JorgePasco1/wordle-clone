@@ -1,7 +1,10 @@
 import { GameContext } from 'context/GameContext';
 import { useEffect, useContext, useCallback } from 'react';
 import { GameStatuses, KeyCodes } from 'services/wordleService/constants';
-import { RowNotFinishedError } from 'services/wordleService/errors';
+import {
+  InvalidWordError,
+  RowNotFinishedError,
+} from 'services/wordleService/errors';
 import { isLetter } from 'util/helpers/stringsHelper';
 
 export default function useGame() {
@@ -41,6 +44,8 @@ export default function useGame() {
     } catch (err) {
       if (err instanceof RowNotFinishedError) {
         alert('Word not finished');
+      } else if (err instanceof InvalidWordError) {
+        alert('Invalid word');
       } else {
         throw err;
       }
